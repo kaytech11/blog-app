@@ -1,0 +1,130 @@
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="max-w-md mx-auto mt-20 bg-white p-8 shadow rounded">
+     <h1 class="text-2xl font-bold mb-4">Register</h1>
+
+     <!-- error message  -->
+     <p id="errorMsg" class="text-red-500 text-sm mb-3 hidden"></p>
+
+     <form id="registerForm" method="POST" action="/register" class="space-y-4">
+          <input id="name" name="name" placeholder="Name" class="w-full border p-3 rounded">
+          <input id="email" name="email" placeholder="Email" class="w-full border p-3 rounded">
+
+          <div class="relative">
+               <input id="password" name="password" type="password" placeholder="Password"
+                    class="w-full border p-3 rounded pr-12">
+
+               <!-- Inline SVG eye -->
+               <span onclick="togglePassword('password', this)" class="absolute right-3 top-3 cursor-pointer">
+                    <svg id="eye-password" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+               </span>
+          </div>
+          <div class="relative">
+               <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm Password"
+                    class="w-full border p-3 rounded pr-12">
+
+               <span onclick="togglePassword('confirmPassword', this)" class="absolute right-3 top-3 cursor-pointer">
+                    <svg id="eye-confirm" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+               </span>
+          </div>
+
+          <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 w-full rounded">
+               Register
+          </button>
+     </form>
+
+     <p class="mt-4 text-center">
+          <a href="/login" class="text-blue-500">Already have account? Login</a>
+     </p>
+</div>
+
+
+<script>
+     const form = document.getElementById("registerForm");
+     const errorMsg = document.getElementById("errorMsg");
+
+     form.addEventListener("submit", function (e) {
+          const name = document.getElementById("name").value.trim();
+          const email = document.getElementById("email").value.trim();
+          const password = document.getElementById("password").value.trim();
+          const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+
+          // hide previous error
+          errorMsg.classList.add("hidden");
+
+          //empty fields
+          if (!name || !email || !password || !confirmPassword) {
+               e.preventDefault();
+               ShowError("All fields are required");
+               return;
+          }
+
+          // email format
+          const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+          if (!email.match(emailPattern)) {
+               e.preventDefault();
+               ShowError("Enter a valid email address");
+               return;
+          }
+
+          // password length
+          if (password.length < 6) {
+               e.preventDefault();
+               ShowError('password must be at least 6 characters');
+               return;
+          }
+
+          if (password.length > 15) {
+               e.preventDefault();
+               ShowError('password cannot exceed 15 characters');
+          }
+
+          // password match
+          if (password !== confirmPassword) {
+               e.preventDefault();
+               ShowError('password do not match');
+               return
+          }
+     });
+     function ShowError(message) {
+          errorMsg.textContent = message;
+          errorMsg.classList.remove('hidden');
+     }
+
+
+     function togglePassword(id, iconSpan) {
+          const input = document.getElementById(id);
+          const svg = iconSpan.querySelector("svg");
+
+          if (input.type === "password") {
+               input.type = "text";
+
+               // change SVG to eye-off (we can flip it with rotation or stroke)
+               svg.innerHTML = `
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a10.05 10.05 0 012.115-3.482m3.394-2.244A10.05 10.05 0 0112 5c4.477 0 8.268 2.943 9.542 7a10.05 10.05 0 01-1.274 2.034M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
+    `;
+          } else {
+               input.type = "password";
+
+               // restore original eye
+               svg.innerHTML = `
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+    `;
+          }
+     }
+</script>

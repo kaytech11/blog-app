@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= author.name %> Blogs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<%- include('../partials/navbar', { session: session }) %>
+
+<div class="max-w-6xl mx-auto px-4 mt-10">
+
+  <!-- Author Header -->
+  <div class="bg-black text-white p-8 rounded-3xl shadow-xl mb-10">
+    <h1 class="text-3xl font-bold"><%= author.name %></h1>
+    <p class="text-gray-300 mt-2">Author profile & published blogs</p>
+  </div>
+
+  <!-- Blog list -->
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+  <% blogs.forEach(blog => { %>
+
+    <div class="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden">
+
+      <% if (blog.photo) { %>
+        <img src="<%= blog.photo %>" class="w-full h-48 object-cover">
+      <% } else { %>
+        <div class="w-full h-48 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+      <% } %>
+
+      <div class="p-5">
+        <h2 class="text-xl font-bold mb-2"><%= blog.title %></h2>
+
+        <p class="text-gray-600 text-sm mb-4">
+          <%= blog.content.substring(0,120) %>...
+        </p>
+
+        <a href="/blogs/<%= blog._id %>"
+           class="text-indigo-600 font-semibold hover:underline">
+           Read more →
+        </a>
+      </div>
+
+    </div>
+
+  <% }) %>
+
+  </div>
+</div>
+
+</body>
+</html>
